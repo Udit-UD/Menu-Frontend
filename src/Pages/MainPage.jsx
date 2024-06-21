@@ -12,6 +12,7 @@ export const MainPage = () => {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
   const [url, setUrl] = useState('');
+  const [restaurant, setRestaurant] = useState('');
   const [error, setError] = useState('');
 
     const createExcelFile = (data, fileName) => {
@@ -37,23 +38,28 @@ export const MainPage = () => {
             url
         });
         if(response1.status === 200){
+            setRestaurant(response1.data.restaurantName);
             setMessage('Scraping successful!');
             if(response1.data.urls?.length === 0){
                 setError('Menu not found!')
                 return;
             }
+            console.log(response1.data);
+
             setTimeout(() => {
                 setMessage('Preparing Menu...');
             }, 1000);
 
             const response2 = await axios.post(`${baseUrl}/getFinalMenu`, {
-                imageUrls: response1.data.urls
+                imageUrls: response1.data.urls,
+                restaurantName: response1.data.restaurantName
             });
             if(response2.status === 200){
                 setTimeout(() => {
                     setMessage('Prepared!');
                 }, 1000);
                 createExcelFile(response2.data.finalRes, 'menu_data');
+                setMessage('Downloaded!');
             }else{
                 setError('Failed to generate Menu')
                 throw new Error(`Failed in GPT Response`)
@@ -109,7 +115,15 @@ export const MainPage = () => {
                     "Search"
                 }
             </button>
-            <p className='font-bold h-8 text-base text-red-700'>{error} </p>
+            {
+                error ?
+                <p className='font-bold h-8 text-base text-red-700'>{error} </p>
+                :
+                restaurant ?
+                <p className='font-bold h-8 text-base text-white'> Fetching for {restaurant} </p>
+                : 
+                <></>
+            }
         </div>
         </div>
     </div>
