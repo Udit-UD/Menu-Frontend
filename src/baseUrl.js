@@ -1,2 +1,2 @@
-// export const baseUrl = `https://resumeverdict-server.onrender.com/resume`;
-export const baseUrl = `http://localhost:8000/menu`;
+export const baseUrl = `https://menu-backend-ku4g.onrender.com/menu`;
+// export const baseUrl = `http://localhost:8000/menu`;
