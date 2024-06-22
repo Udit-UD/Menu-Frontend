@@ -32,6 +32,7 @@ export const MainPage = () => {
     setLoading(true);
     setMessage('Scraping URL...');
     setError('');
+    setRestaurant("");
 
     try{
         const response1 = await axios.post(`${baseUrl}/`, {
@@ -58,7 +59,9 @@ export const MainPage = () => {
                 setTimeout(() => {
                     setMessage('Prepared!');
                 }, 1000);
-                createExcelFile(response2.data.finalRes, 'menu_data');
+                console.log(restaurant)
+                const safeRestaurantName = response1?.data.restaurantName.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_').toLowerCase();
+                createExcelFile(response2.data.finalResults, safeRestaurantName);
                 setMessage('Downloaded!');
             }else{
                 setError('Failed to generate Menu')
